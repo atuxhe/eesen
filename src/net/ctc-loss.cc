@@ -57,7 +57,12 @@ void Ctc::Eval(const CuMatrixBase<BaseFloat> &net_out, const std::vector<int32> 
   // compute the log-likelihood of the label sequence given the inputs logP(z|x)
   BaseFloat tmp1 = alpha_(num_frames-1, exp_len_labels-1); 
   BaseFloat tmp2 = alpha_(num_frames-1, exp_len_labels-2);
-  BaseFloat pzx = tmp1 + log(1 + ExpA(tmp2 - tmp1));
+  BaseFloat pzx  = 0.0;
+  if (tmp1 > tmp2) {
+      pzx = tmp1 + log(1 + ExpA(tmp2 - tmp1));
+  } else {
+      pzx = tmp2 + log(1 + ExpA(tmp1 - tmp2));
+  }
 
   // compute the errors
   ctc_err_.Resize(num_frames, num_classes, kSetZero);
@@ -149,7 +154,11 @@ void Ctc::EvalParallel(const std::vector<int32> &frame_num_utt, const CuMatrixBa
     int frame_num = frame_num_utt[s];
     BaseFloat tmp1 = alpha_((frame_num-1)*num_sequence + s, label_len - 1);
     BaseFloat tmp2 = alpha_((frame_num-1)*num_sequence + s, label_len-2);
-    pzx(s) = tmp1 + log(1 + ExpA(tmp2 - tmp1));
+    if (tmp1 > tmp2) {
+      pzx(s) = tmp1 + log(1 + ExpA(tmp2 - tmp1));
+    } else {
+      pzx(s) = tmp2 + log(1 + ExpA(tmp1 - tmp2));
+    }
   }
 
   // gradients from CTC
