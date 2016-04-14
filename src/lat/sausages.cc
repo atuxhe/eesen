@@ -361,4 +361,4 @@ MinimumBayesRisk::MinimumBayesRisk(const CompactLattice &clat_in,
   MbrDecode();
 }
 
-}  // namespace kaldi
+}  // namespace eesen
