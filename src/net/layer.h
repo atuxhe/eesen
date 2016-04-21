@@ -54,11 +54,14 @@ class Layer {
     l_BiLstm_Parallel,
     l_Lstm,
     l_Lstm_Parallel,
+    l_LstmProj,
+    l_LstmProj_Parallel,
 
     l_Activation = 0x0200, 
     l_Softmax,
     l_Sigmoid,
     l_Tanh,
+    l_Relu,
   } LayerType;
   /// A pair of type and marker 
   struct key_value {

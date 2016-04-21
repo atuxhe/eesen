@@ -58,11 +58,14 @@ void Ctc::Eval(const CuMatrixBase<BaseFloat> &net_out, const std::vector<int32> 
   BaseFloat tmp1 = alpha_(num_frames-1, exp_len_labels-1); 
   BaseFloat tmp2 = alpha_(num_frames-1, exp_len_labels-2);
   BaseFloat pzx  = 0.0;
-  if (tmp1 > tmp2) {
-      pzx = tmp1 + log(1 + ExpA(tmp2 - tmp1));
-  } else {
-      pzx = tmp2 + log(1 + ExpA(tmp1 - tmp2));
-  }
+
+  pzx = LogAPlusB(tmp1, tmp2);
+
+  //if (tmp1 > tmp2) {
+  //    pzx = tmp1 + log(1 + ExpA(tmp2 - tmp1));
+  //} else {
+  //    pzx = tmp2 + log(1 + ExpA(tmp1 - tmp2));
+  //}
 
   // compute the errors
   ctc_err_.Resize(num_frames, num_classes, kSetZero);
@@ -153,12 +156,13 @@ void Ctc::EvalParallel(const std::vector<int32> &frame_num_utt, const CuMatrixBa
     int label_len = 2* label[s].size() + 1;
     int frame_num = frame_num_utt[s];
     BaseFloat tmp1 = alpha_((frame_num-1)*num_sequence + s, label_len - 1);
-    BaseFloat tmp2 = alpha_((frame_num-1)*num_sequence + s, label_len-2);
-    if (tmp1 > tmp2) {
-      pzx(s) = tmp1 + log(1 + ExpA(tmp2 - tmp1));
-    } else {
-      pzx(s) = tmp2 + log(1 + ExpA(tmp1 - tmp2));
-    }
+    BaseFloat tmp2 = alpha_((frame_num-1)*num_sequence + s, label_len - 2);
+    pzx(s) = LogAPlusB(tmp1, tmp2);
+    //if (tmp1 > tmp2) {
+    //  pzx(s) = tmp1 + log(1 + ExpA(tmp2 - tmp1));
+    //} else {
+    //  pzx(s) = tmp2 + log(1 + ExpA(tmp1 - tmp2));
+    //}
   }
 
   // gradients from CTC

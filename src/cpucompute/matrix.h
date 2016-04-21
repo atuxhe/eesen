@@ -365,6 +365,9 @@ class MatrixBase {
   /// Set each element to the tanh of the corresponding element of "src".
   void Tanh(const MatrixBase<Real> &src);
 
+  /// Set each element to the relu of the corresponding element of "src".
+  void Relu(const MatrixBase<Real> &src);
+  
   // Function used in backpropagating derivatives of the sigmoid function:
   // element-by-element, set *this = diff * value * (1.0 - value).
   void DiffSigmoid(const MatrixBase<Real> &value,
@@ -375,6 +378,11 @@ class MatrixBase {
   void DiffTanh(const MatrixBase<Real> &value,
                 const MatrixBase<Real> &diff);
   
+  // Function used in backpropagating derivatives of the tanh function:
+  // element-by-element, set *this = value > 0 ? diff : 0.0.
+  void DiffRelu(const MatrixBase<Real> &value,
+                const MatrixBase<Real> &diff);
+
   friend Real eesen::TraceMatMat<Real>(const MatrixBase<Real> &A,
       const MatrixBase<Real> &B, MatrixTransposeType trans);  // tr (A B)
 

@@ -23,12 +23,15 @@
 #include "net/softmax-layer.h"
 #include "net/sigmoid-layer.h"
 #include "net/tanh-layer.h"
+#include "net/relu-layer.h"
 #include "net/affine-trans-layer.h"
 #include "net/utils-functions.h"
 #include "net/bilstm-layer.h"
 #include "net/bilstm-parallel-layer.h"
 #include "net/lstm-layer.h"
 #include "net/lstm-parallel-layer.h"
+#include "net/lstmproj-layer.h"
+#include "net/lstmproj-parallel-layer.h"
 
 #include <sstream>
 
@@ -40,9 +43,12 @@ const struct Layer::key_value Layer::kMarkerMap[] = {
   { Layer::l_BiLstm_Parallel,"<BiLstmParallel>"},
   { Layer::l_Lstm,"<Lstm>"},
   { Layer::l_Lstm_Parallel,"<LstmParallel>"},
+  { Layer::l_LstmProj,"<LstmProj>"},
+  { Layer::l_LstmProj_Parallel,"<LstmProjParallel>"},
   { Layer::l_Softmax,"<Softmax>" },
   { Layer::l_Sigmoid,"<Sigmoid>" },
   { Layer::l_Tanh,"<Tanh>" },
+  { Layer::l_Relu,"<Relu>" },
 };
 
 
@@ -89,6 +95,12 @@ Layer* Layer::NewLayerOfType(LayerType layer_type,
     case Layer::l_Lstm_Parallel :
       layer = new LstmParallel(input_dim, output_dim);
       break;
+    case Layer::l_LstmProj :
+      layer = new LstmProj(input_dim, output_dim);
+      break;
+    case Layer::l_LstmProj_Parallel :
+      layer = new LstmProjParallel(input_dim, output_dim);
+      break;
     case Layer::l_Softmax :
       layer = new Softmax(input_dim, output_dim);
       break;
@@ -97,6 +109,9 @@ Layer* Layer::NewLayerOfType(LayerType layer_type,
       break;
     case Layer::l_Tanh :
       layer = new Tanh(input_dim, output_dim);
+      break;
+    case Layer::l_Relu :
+      layer = new Relu(input_dim, output_dim);
       break;
     case Layer::l_Unknown :
     default :
@@ -115,12 +130,7 @@ Layer* Layer::Init(const std::string &conf_line) {
   LayerType layer_type = MarkerToType(layer_type_string);
   ExpectToken(is, false, "<InputDim>");
   ReadBasicType(is, false, &input_dim);
-
-  if (IsLstmType(layer_type_string)) {
-    ExpectToken(is, false, "<CellDim>");
-  } else {
-    ExpectToken(is, false, "<OutputDim>");
-  }
+  ExpectToken(is, false, "<OutputDim>");
   ReadBasicType(is, false, &output_dim);
   Layer *layer = NewLayerOfType(layer_type, input_dim, output_dim);
 
@@ -150,11 +160,7 @@ Layer* Layer::Read(std::istream &is, bool binary) {
 
   ExpectToken(is, binary, "<InputDim>");
   ReadBasicType(is, binary, &dim_in);
-  if (IsLstmType(token)) {
-    ExpectToken(is, binary, "<CellDim>");
-  } else {
-    ExpectToken(is, binary, "<OutputDim>");
-  }
+  ExpectToken(is, binary, "<OutputDim>");
   ReadBasicType(is, binary, &dim_out);
   
   Layer *layer = NewLayerOfType(MarkerToType(token), dim_in, dim_out);
@@ -180,11 +186,7 @@ void Layer::ReRead(std::istream &is, bool binary) {
 
   ExpectToken(is, binary, "<InputDim>");
   ReadBasicType(is, binary, &dim_in);
-  if (IsLstmType(token)) {
-    ExpectToken(is, binary, "<CellDim>");
-  } else {
-    ExpectToken(is, binary, "<OutputDim>");
-  }
+  ExpectToken(is, binary, "<OutputDim>");
   ReadBasicType(is, binary, &dim_out);
 
   KALDI_ASSERT(dim_in == input_dim_);
@@ -198,11 +200,7 @@ void Layer::Write(std::ostream &os, bool binary) const {
   WriteToken(os, binary, layer_type_string);
   WriteToken(os, binary, "<InputDim>");
   WriteBasicType(os, binary, InputDim());
-  if (IsLstmType(layer_type_string)) {
-    WriteToken(os, binary, "<CellDim>");
-  } else {
-    WriteToken(os, binary, "<OutputDim>");
-  }
+  WriteToken(os, binary, "<OutputDim>");
   WriteBasicType(os, binary, OutputDim());
   if(!binary) os << "\n";
   this->WriteData(os, binary);
@@ -213,11 +211,7 @@ void Layer::WriteNonParal(std::ostream &os, bool binary) const {
   WriteToken(os, binary, layer_type_string);
   WriteToken(os, binary, "<InputDim>");
   WriteBasicType(os, binary, InputDim());
-  if (IsLstmType(layer_type_string)) {
-    WriteToken(os, binary, "<CellDim>");
-  } else {
-    WriteToken(os, binary, "<OutputDim>");
-  }
+  WriteToken(os, binary, "<OutputDim>");
   WriteBasicType(os, binary, OutputDim());
   if(!binary) os << "\n";
   this->WriteData(os, binary);

@@ -49,7 +49,8 @@ public:
       std::string token;
       while (!is.eof()) {
         ReadToken(is, false, &token);
-        if (token == "<ParamRange>")  ReadBasicType(is, false, &param_range);
+        if (token == "<CellDim>")  ReadBasicType(is, false, &cell_dim_);
+        else if (token == "<ParamRange>")  ReadBasicType(is, false, &param_range);
         else if (token == "<LearnRateCoef>") ReadBasicType(is, false, &learn_rate_coef);
         else if (token == "<MaxGrad>") ReadBasicType(is, false, &max_grad);
         else if (token == "<FgateBias>") ReadBasicType(is, false, &fgate_bias_init);
@@ -80,6 +81,10 @@ public:
     void ReadData(std::istream &is, bool binary) {
       // optional learning-rate coefs
       if ('<' == Peek(is, binary)) {
+        ExpectToken(is, binary, "<CellDim>");
+        ReadBasicType(is, binary, &cell_dim_);
+      }
+      if ('<' == Peek(is, binary)) {
         ExpectToken(is, binary, "<LearnRateCoef>");
         ReadBasicType(is, binary, &learn_rate_coef_);
       }
@@ -105,6 +110,8 @@ public:
     }
 
     void WriteData(std::ostream &os, bool binary) const {
+      WriteToken(os, binary, "<CellDim>");
+      WriteBasicType(os, binary, cell_dim_);
       WriteToken(os, binary, "<LearnRateCoef>");
       WriteBasicType(os, binary, learn_rate_coef_);
       WriteToken(os, binary, "<MaxGrad>");

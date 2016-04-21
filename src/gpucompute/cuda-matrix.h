@@ -136,6 +136,9 @@ class CuMatrixBase {
   /// Apply the tanh function to each element x = (1 - exp(-2x)) / (1 + exp(-2x))
   void Tanh(const CuMatrixBase<Real> &src);
 
+  /// Apply the relu function to each element x = x > 0 ? x, 0.0
+  void Relu(const CuMatrixBase<Real> &src);
+
   /// Back-propagation through the sigmoid function.  Here, "value" is the
   /// sigmoid output. *this = diff * value * (1 - value).
   void DiffSigmoid(const CuMatrixBase<Real> &value,
@@ -146,6 +149,10 @@ class CuMatrixBase {
   void DiffTanh(const CuMatrixBase<Real> &value,
                 const CuMatrixBase<Real> &diff);
 
+  /// Back-propagation through the relu function.  Here, "value" is the
+  /// relu output.  *this = value > 0 ? value : 0.0
+  void DiffRelu(const CuMatrixBase<Real> &value,
+                const CuMatrixBase<Real> &diff);
 
   /////////////////////////////////////////////////////
   /////  CTC Training

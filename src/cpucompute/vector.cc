@@ -802,6 +802,15 @@ void VectorBase<Real>::Tanh(const VectorBase<Real> &src) {
 }
 #endif
 
+template<typename Real>
+void VectorBase<Real>::Relu(const VectorBase<Real> &src) {
+  KALDI_ASSERT(dim_ == src.dim_);
+  for (MatrixIndexT i = 0; i < dim_; i++) {
+    Real x = src.data_[i];
+    data_[i] = (x > 0.0) * x;
+  }
+}
+
 #ifdef HAVE_MKL
 // Implementing sigmoid based on tanh.
 template<>

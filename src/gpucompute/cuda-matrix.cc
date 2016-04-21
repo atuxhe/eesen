@@ -739,8 +739,6 @@ void CuMatrixBase<Real>::Tanh(const CuMatrixBase<Real> &src) {
   }
 }
 
-
-
 template<typename Real> // Ein -> diff, Y -> value
 void CuMatrixBase<Real>::DiffTanh(const CuMatrixBase<Real> &value,
                                   const CuMatrixBase<Real> &diff) {
@@ -761,6 +759,50 @@ void CuMatrixBase<Real>::DiffTanh(const CuMatrixBase<Real> &value,
     Mat().DiffTanh(value.Mat(), diff.Mat());
   }
 }
+
+
+template<typename Real>
+void CuMatrixBase<Real>::Relu(const CuMatrixBase<Real> &src) {
+  KALDI_ASSERT(SameDim(*this, src));
+#if HAVE_CUDA == 1 
+  if (CuDevice::Instantiate().Enabled()) {
+    Timer tim;
+
+    dim3 dimBlock(CU2DBLOCK, CU2DBLOCK);
+    dim3 dimGrid(n_blocks(src.NumCols(), CU2DBLOCK), n_blocks(src.NumRows(), CU2DBLOCK));
+
+    cuda_relu(dimGrid, dimBlock, this->data_, src.data_, this->Dim(), src.Stride());
+    CU_SAFE_CALL(cudaGetLastError());
+
+    CuDevice::Instantiate().AccuProfile(__func__, tim.Elapsed());
+  } else
+#endif
+  {
+    Mat().Relu(src.Mat());
+  }
+}
+
+template<typename Real> // Ein -> diff, Y -> value
+void CuMatrixBase<Real>::DiffRelu(const CuMatrixBase<Real> &value,
+                                  const CuMatrixBase<Real> &diff) {
+#if HAVE_CUDA == 1 
+  if (CuDevice::Instantiate().Enabled()) {
+    Timer tim;
+
+    dim3 dimBlock(CU2DBLOCK, CU2DBLOCK);
+    dim3 dimGrid(n_blocks(num_cols_, CU2DBLOCK), n_blocks(num_rows_, CU2DBLOCK));
+
+    cuda_diff_relu(dimGrid, dimBlock, data_, diff.data_, value.data_, Dim(), diff.Stride(), value.Stride());
+    CU_SAFE_CALL(cudaGetLastError());
+
+    CuDevice::Instantiate().AccuProfile(__func__, tim.Elapsed());
+  } else
+#endif
+  {
+    Mat().DiffRelu(value.Mat(), diff.Mat());
+  }
+}
+
 
 template<typename Real>
 void CuMatrixBase<Real>::ComputeCtcAlpha(const CuMatrixBase<Real> &prob,
