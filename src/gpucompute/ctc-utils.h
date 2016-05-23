@@ -20,6 +20,7 @@
 #ifndef EESEN_GPUCOMPUTE_CTC_UTILS_H_
 #define EESEN_GPUCOMPUTE_CTC_UTILS_H_
 
+//#if HAVE_CUDA == 1
 #pragma GCC diagnostic warning "-fpermissive"
 
 /*
@@ -29,6 +30,7 @@
 template <typename T>
 struct NumericLimits;
 
+// some compilers (Mac) require the following 8 "const" to be "constexpr"?
 template <>
 struct NumericLimits<float>
 {

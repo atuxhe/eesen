@@ -1,7 +1,7 @@
 // lat/sausages.h
 
-// Copyright 2012  Johns Hopkins University (Author: Daniel Povey)
-//           2015  Guoguo Chen
+// Copyright 2012       Johns Hopkins University (Author: Daniel Povey)
+//           2015       Guoguo Chen
 
 // See ../../COPYING for clarification regarding multiple authors
 //

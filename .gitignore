@@ -22,6 +22,8 @@
 
 # backups
 *~
+*.bak
+project.xcworkspace
 
 # swp files
 *.swp
