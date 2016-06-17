@@ -12,7 +12,7 @@
          ## This relates to the queue.
 . path.sh
 
-stage=0
+stage=3
 
 . parse_options.sh
 
@@ -22,7 +22,7 @@ if [ $stage -le 1 ]; then
   echo =====================================================================
   # If you have downloaded the data (e.g., for Kaldi systems), then you can
   # simply link the db directory to here and skip this step
-  local/tedlium_download_data.sh || exit 1;
+  #local/tedlium_download_data.sh || exit 1;
 
   # Use the same data preparation script from Kaldi
   local/tedlium_prepare_data.sh --data-dir db/TEDLIUM_release2 || exit 1
@@ -69,9 +69,9 @@ if [ $stage -le 3 ]; then
   target_num=`cat data/lang_phn/units.txt | wc -l`; target_num=$[$target_num+1]; #  #targets = #labels + 1 (the blank)
 
   # Output the network topology
-  utils/model_topo.py --input-feat-dim $input_feat_dim --lstm-layer-num $lstm_layer_num \
-    --lstm-cell-dim $lstm_cell_dim --target-num $target_num \
-    --fgate-bias-init 1.0 > $dir/nnet.proto || exit 1;
+  #utils/model_topo.py --input-feat-dim $input_feat_dim --lstm-layer-num $lstm_layer_num \
+  #  --lstm-cell-dim $lstm_cell_dim --target-num $target_num \
+  #  --fgate-bias-init 1.0 > $dir/nnet.proto || exit 1;
 
   # Label sequences; simply convert words into their label indices
   utils/prep_ctc_trans.py data/lang_phn/lexicon_numbers.txt data/train_tr95/text "<UNK>" | gzip -c - > $dir/labels.tr.gz
