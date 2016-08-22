@@ -1,8 +1,8 @@
 export EESEN_ROOT=`pwd`/../../..
-export PATH=$PWD/utils/:$EESEN_ROOT/src/netbin:$EESEN_ROOT/src/netbin:$EESEN_ROOT/src/featbin:$EESEN_ROOT/src/decoderbin:$EESEN_ROOT/src/fstbin:$EESEN_ROOT/tools/openfst/bin:$EESEN_ROOT/tools/irstlm/bin/:$PWD:$PATH
+export PATH=$PWD/utils/:$EESEN_ROOT/src/netbin:$EESEN_ROOT/src/featbin:$EESEN_ROOT/src/decoderbin:$EESEN_ROOT/src/fstbin:$EESEN_ROOT/tools/openfst/bin:$EESEN_ROOT/tools/irstlm/bin/:$PWD:$PATH
 export LC_ALL=C
 
-#if [[ `uname -n` =~ ip-* ]]; then
+if [[ `uname -n` =~ ip-* ]]; then
   # AWS instance
 #  export KALDI_ROOT=/home/fmetze/tools/kaldi
 #  export TMPDIR=/tmp
@@ -14,7 +14,15 @@ export LC_ALL=C
 
 #  export TMPDIR=/scratch/${USER}/${SLURM_JOBID}
 
-#elif [[ `uname -n` =~ compute- ]]; then
+elif [[ `uname -n` =~ br0* || `uname -n` =~ gpu0* ]]; then
+  # PSC Bridges
+  module load atlas
+  module load cuda
+
+  export TMPDIR=$LOCAL
+  #export TMPDIR=/pylon1/ir3l68p/metze
+
+elif [[ `uname -n` =~ compute- ]]; then
   # CMU Rocks cluster
 #  module load python27
 #  module load gcc-4.9.2
@@ -24,13 +32,16 @@ export LC_ALL=C
   # just in case we're running on a GPU node
 #  export CUDA_VISIBLE_DEVICES=`qstat -n $PBS_JOBID|awk ' END { split ($NF, a, "/"); printf ("%s\n", a[2]) } '`
 
-#else
-  # continue running on local node or VM
-  #echo "Running locally"
-#fi
+else
+  # where are we?
+  echo Please specify cluster in path.sh
+  exit 1;
+fi
 
-#if [[ ! -z ${acwt+x} ]]; then
+if [[ ! -z ${acwt+x} ]]; then
   # let's assume we're decoding
-#    export PATH=$EESEN_ROOT/src-nogpu/netbin:$PATH
-#    echo "Preferring non-gpu netbin code"
-#fi
+    export PATH=$EESEN_ROOT/src-nogpu/netbin:$PATH
+    echo "Preferring non-gpu netbin code"
+fi
+
+. ../../../tools/env.sh

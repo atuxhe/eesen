@@ -1,5 +1,13 @@
 #!/bin/bash
 
+### for CMU rocks cluster ###
+#PBS -q standard
+#PBS -j oe
+#PBS -o log
+#PBS -d .
+#PBS -V
+#PBS -l nodes=1:ppn=1
+
 ### for XSede comet cluster ###
 ### submit sbatch ---ignore-pbs run_ctc_phn.sh
 #SBATCH --partition=compute
@@ -9,14 +17,6 @@
 #SBATCH --export=ALL
 #SBATCH --time="48:00:00"
 #SBATCH --mem=100G
-
-### for CMU rocks cluster ###
-#PBS -q standard
-#PBS -j oe
-#PBS -o log
-#PBS -d .
-#PBS -V
-#PBS -l nodes=1:ppn=1
 
 . ./cmd.sh ## You'll want to change cmd.sh to something that will work on your system.
            ## This relates to the queue.

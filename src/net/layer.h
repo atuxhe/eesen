@@ -61,6 +61,7 @@ class Layer {
 
     l_Activation = 0x0200, 
     l_Softmax,
+    l_BlockSoftmax,
     l_Sigmoid,
     l_Tanh,
     l_Relu,

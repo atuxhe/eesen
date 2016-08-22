@@ -50,6 +50,7 @@ const struct Layer::key_value Layer::kMarkerMap[] = {
   { Layer::l_LstmProj,"<LstmProj>"},
   { Layer::l_LstmProj_Parallel,"<LstmProjParallel>"},
   { Layer::l_Softmax,"<Softmax>" },
+  { Layer::l_BlockSoftmax,"<BlockSoftmax>" },
   { Layer::l_Sigmoid,"<Sigmoid>" },
   { Layer::l_Tanh,"<Tanh>" },
   { Layer::l_Relu,"<Relu>" },
@@ -113,6 +114,9 @@ Layer* Layer::NewLayerOfType(LayerType layer_type,
       break;
     case Layer::l_Softmax :
       layer = new Softmax(input_dim, output_dim);
+      break;
+    case Layer::l_BlockSoftmax :
+      layer = new BlockSoftmax(input_dim, output_dim);
       break;
     case Layer::l_Sigmoid :
       layer = new Sigmoid(input_dim, output_dim);
