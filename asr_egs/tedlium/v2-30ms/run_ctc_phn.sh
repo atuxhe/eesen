@@ -15,7 +15,8 @@
 stage=3
 
 . parse_options.sh
-
+false &&
+{
 if [ $stage -le 1 ]; then
   echo =====================================================================
   echo "             Data Preparation and FST Construction                 "
@@ -53,6 +54,7 @@ if [ $stage -le 2 ]; then
   # Split the whole training data into training (95%) and cross-validation (5%) sets
   utils/subset_data_dir_tr_cv.sh --cv-spk-percent 5 data/train data/train_tr95 data/train_cv05 || exit 1
 fi
+}
 
 if [ $stage -le 3 ]; then
   echo =====================================================================
@@ -73,6 +75,8 @@ if [ $stage -le 3 ]; then
   #  --lstm-cell-dim $lstm_cell_dim --target-num $target_num \
   #  --fgate-bias-init 1.0 > $dir/nnet.proto || exit 1;
 
+false &&
+{
   # Label sequences; simply convert words into their label indices
   utils/prep_ctc_trans.py data/lang_phn/lexicon_numbers.txt data/train_tr95/text "<UNK>" | gzip -c - > $dir/labels.tr.gz
   utils/prep_ctc_trans.py data/lang_phn/lexicon_numbers.txt data/train_cv05/text "<UNK>" | gzip -c - > $dir/labels.cv.gz
@@ -83,7 +87,7 @@ if [ $stage -le 3 ]; then
     --learn-rate 4e-5 --report-step 1000 --halving-after-epoch 12 --min-iters 28 \
     --max-iters 32 --splice-feats true --subsample-feats true --min-len 20 \
     data/train_tr95 data/train_cv05 $dir || exit 1;
-
+}
 
   echo =====================================================================
   echo "                            Decoding                               "
@@ -94,3 +98,4 @@ if [ $stage -le 3 ]; then
   steps/decode_ctc_lat.sh --cmd "$decode_cmd" --nj 11 --beam 17.0 --lattice_beam 8.0 --max-active 5000 --acwt 0.6 \
     data/lang_phn_test data/test $dir/decode_test || exit 1;
 fi
+

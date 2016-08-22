@@ -28,6 +28,8 @@
 #include "net/utils-functions.h"
 #include "net/bilstm-layer.h"
 #include "net/bilstm-parallel-layer.h"
+#include "net/bilstmproj-layer.h"
+#include "net/bilstmproj-parallel-layer.h"
 #include "net/lstm-layer.h"
 #include "net/lstm-parallel-layer.h"
 #include "net/lstmproj-layer.h"
@@ -41,6 +43,8 @@ const struct Layer::key_value Layer::kMarkerMap[] = {
   { Layer::l_Affine_Transform,"<AffineTransform>" },
   { Layer::l_BiLstm,"<BiLstm>"},
   { Layer::l_BiLstm_Parallel,"<BiLstmParallel>"},
+  { Layer::l_BiLstmProj,"<BiLstmProj>"},
+  { Layer::l_BiLstmProj_Parallel,"<BiLstmProjParallel>"},
   { Layer::l_Lstm,"<Lstm>"},
   { Layer::l_Lstm_Parallel,"<LstmParallel>"},
   { Layer::l_LstmProj,"<LstmProj>"},
@@ -88,6 +92,12 @@ Layer* Layer::NewLayerOfType(LayerType layer_type,
       break;
     case Layer::l_BiLstm_Parallel :
       layer = new BiLstmParallel(input_dim, output_dim);
+      break;
+    case Layer::l_BiLstmProj :
+      layer = new BiLstmProj(input_dim, output_dim);
+      break;
+    case Layer::l_BiLstmProj_Parallel :
+      layer = new BiLstmProjParallel(input_dim, output_dim);
       break;
     case Layer::l_Lstm :
       layer = new Lstm(input_dim, output_dim);

@@ -56,6 +56,8 @@ class Layer {
     l_Lstm_Parallel,
     l_LstmProj,
     l_LstmProj_Parallel,
+    l_BiLstmProj,
+    l_BiLstmProj_Parallel,
 
     l_Activation = 0x0200, 
     l_Softmax,

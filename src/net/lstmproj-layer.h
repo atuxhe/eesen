@@ -271,7 +271,7 @@ public:
           CuSubVector<BaseFloat> y_c(YC.Row(t));  CuSubMatrix<BaseFloat> YC_t(YC.RowRange(t,1));  
           CuSubVector<BaseFloat> y_h(YH.Row(t));  CuSubMatrix<BaseFloat> YH_t(YH.RowRange(t,1));  
           CuSubVector<BaseFloat> y_m(YM.Row(t));  CuSubMatrix<BaseFloat> YM_t(YM.RowRange(t,1));  
-          CuSubVector<BaseFloat> y_r(YM.Row(t));  CuSubMatrix<BaseFloat> YR_t(YM.RowRange(t,1));  
+          CuSubVector<BaseFloat> y_r(YR.Row(t));  CuSubMatrix<BaseFloat> YR_t(YR.RowRange(t,1));  
           // variables representing errors of invidivual units/gates 
           CuSubVector<BaseFloat> d_g(DG.Row(t));  CuSubMatrix<BaseFloat> DG_t(DG.RowRange(t,1));
           CuSubVector<BaseFloat> d_i(DI.Row(t));  CuSubMatrix<BaseFloat> DI_t(DI.RowRange(t,1));
@@ -280,7 +280,7 @@ public:
           CuSubVector<BaseFloat> d_c(DC.Row(t));  CuSubMatrix<BaseFloat> DC_t(DC.RowRange(t,1));
           CuSubVector<BaseFloat> d_h(DH.Row(t));  CuSubMatrix<BaseFloat> DH_t(DH.RowRange(t,1));
           CuSubVector<BaseFloat> d_m(DM.Row(t));  CuSubMatrix<BaseFloat> DM_t(DM.RowRange(t,1));
-          CuSubVector<BaseFloat> d_r(DM.Row(t));  CuSubMatrix<BaseFloat> DR_t(DM.RowRange(t,1));
+          CuSubVector<BaseFloat> d_r(DR.Row(t));  CuSubMatrix<BaseFloat> DR_t(DR.RowRange(t,1));
 
           //d_r backprop error from g(t+1), i(t+1), f(t+1), o(t+1) to r(t)
           d_r.AddMatVec(1.0, wei_gifo_r_, kNoTrans, DGIFO.Row(t+1), 1.0);
