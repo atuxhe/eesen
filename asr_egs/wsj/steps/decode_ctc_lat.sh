@@ -20,8 +20,8 @@ max_mem=50000000 # approx. limit to memory consumption during minimization in by
 mdl=""
 
 skip_scoring=false # whether to skip WER scoring
-score_with_conf=false
 scoring_opts="--min-acwt 5 --max-acwt 15 --acwt-factor 0.1"
+score_with_conf=false
 
 # feature configurations; will be read from the training dir if not provided
 norm_vars=
