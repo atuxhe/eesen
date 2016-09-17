@@ -4,8 +4,8 @@ export LC_ALL=C
 
 if [[ `uname -n` =~ ip-* ]]; then
   # AWS instance
-#  export KALDI_ROOT=/home/fmetze/tools/kaldi
-#  export TMPDIR=/tmp
+  export KALDI_ROOT=/home/fmetze/tools/kaldi
+  export TMPDIR=/tmp
 
 #elif [[ `uname -n` =~ comet* ]]; then
   # comet cluster
@@ -27,7 +27,7 @@ elif [[ `uname -n` =~ compute- ]]; then
 #  module load python27
 #  module load gcc-4.9.2
 
-#  export TMPDIR=/scratch
+  export TMPDIR=/scratch
 
   # just in case we're running on a GPU node
 #  export CUDA_VISIBLE_DEVICES=`qstat -n $PBS_JOBID|awk ' END { split ($NF, a, "/"); printf ("%s\n", a[2]) } '`
@@ -43,4 +43,4 @@ if [[ ! -z ${acwt+x} ]]; then
     echo "Preferring non-gpu netbin code"
 fi
 
-. ../../../tools/env.sh
+#. ../../../tools/env.sh

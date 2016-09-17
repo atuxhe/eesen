@@ -101,9 +101,9 @@ false &&
   echo "                            Decoding                               "
   echo =====================================================================
   # decoding
-  steps/decode_ctc_lat.sh --cmd "$decode_cmd" --nj 8 --beam 17.0 --lattice_beam 8.0 --max-active 5000 --acwt 0.6 \
+  steps/decode_ctc_lat.sh --cmd "$decode_cmd" --nj 8 --beam 17.0 --lattice_beam 8.0 --max-active 1000 --acwt 0.6 \
     data/lang_phn_test data/dev $dir/decode_dev || exit 1;
-  steps/decode_ctc_lat.sh --cmd "$decode_cmd" --nj 11 --beam 17.0 --lattice_beam 8.0 --max-active 5000 --acwt 0.6 \
+  steps/decode_ctc_lat.sh --cmd "$decode_cmd" --nj 11 --beam 17.0 --lattice_beam 8.0 --max-active 1000 --acwt 0.6 \
     data/lang_phn_test data/test $dir/decode_test || exit 1;
 fi
 

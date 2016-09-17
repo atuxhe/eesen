@@ -107,7 +107,9 @@ int main(int argc, char *argv[]) {
 
       for(int i = 0; i < vec_tmp.NumRows(); i++){
 	mat.Row(i).Range(0, vec_tmp.NumCols()).CopyFromVec(vec_tmp.Row(i));
-	mat.Row(i).Range(vec_tmp.NumCols() + blockid, 1).CopyFromVec(oneVec);
+        if (blockid != -1) {
+	    mat.Row(i).Range(vec_tmp.NumCols() + blockid, 1).CopyFromVec(oneVec);
+        }
       }
       
       // Feed the sequence to the network for a feedforward pass
